@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {splitCompleted} from '../src/ace_studio/static/speech.mjs';
+assert.deepEqual(splitCompleted('Hello wor'), {units:['Hello'],consumed:6});
+assert.deepEqual(splitCompleted('Hello world '), {units:['Hello','world'],consumed:12});
+assert.deepEqual(splitCompleted('hello'), {units:[],consumed:0});
+assert.deepEqual(splitCompleted('Hello.'), {units:['Hello.'],consumed:6});
+assert.deepEqual(splitCompleted('  hello\nworld\n'), {units:['hello','world'],consumed:14});
+assert.deepEqual(splitCompleted('Hello world. Next','sentence'), {units:['Hello world.'],consumed:13});
+assert.deepEqual(splitCompleted('last word','word',true), {units:['last word'],consumed:9});
+assert.deepEqual(splitCompleted('It’s fine! '), {units:['It’s','fine!'],consumed:10});
+console.log('Speech word/sentence boundary checks passed');

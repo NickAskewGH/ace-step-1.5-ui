@@ -1,0 +1,46 @@
+[project]
+name = "ace-step-1-5"
+version = "0.1.0"
+description = "Local ACE-Step music studio, experimental speech lab, and CLI"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = ["click>=8.1", "fastapi>=0.115", "uvicorn[standard]>=0.30", "pydantic>=2.10", "soundfile>=0.13", "python-multipart>=0.0.18"]
+
+[project.optional-dependencies]
+inference = [
+    "ace-step",
+    "nano-vllm",
+    "torchcodec==0.10.0",
+]
+
+[project.scripts]
+ace-studio = "ace_studio.cli:app"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ace_studio"]
+
+[tool.uv.sources]
+ace-step = { git = "https://github.com/ACE-Step/ACE-Step-1.5", rev = "ca1e85fe9430179831e6bc6be790c332190a3866" }
+nano-vllm = { git = "https://github.com/ACE-Step/ACE-Step-1.5", rev = "ca1e85fe9430179831e6bc6be790c332190a3866", subdirectory = "acestep/third_parts/nano-vllm" }
+torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
+torchaudio = { index = "pytorch-cu128" }
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[dependency-groups]
+dev = [
+    "rust-just>=1.59.0",
+    "pytest>=8.3",
+    "httpx>=0.28",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

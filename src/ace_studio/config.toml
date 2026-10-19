@@ -1,0 +1,4 @@
+# Default checkpoint locations. CLI flags and environment variables take precedence.
+[models]
+base = "~/Downloads/ACE-Step--Ace-Step1.5"
+xl = "~/Downloads/ACE-Step--acestep-v15-xl-turbo"

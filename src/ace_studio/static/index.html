@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ACE-Step · Local Studio</title><link rel="stylesheet" href="/static/style.css"></head>
+<body>
+<aside class="sidebar">
+  <a class="brand" href="/"><span class="brand-icon">a<span>↗</span></span><span>ACE—STEP<small>LOCAL SOUND STUDIO</small></span></a>
+  <div class="local-label"><i></i> ON YOUR MACHINE</div>
+  <nav aria-label="Workspace"><button class="nav active" data-page="music">♫ <span>Music studio</span><small>01</small></button><button class="nav" data-page="speech">≋ <span>Speech lab</span><small>02</small></button><button class="nav" data-page="library">▤ <span>Library</span><small>03</small></button></nav>
+  <div class="sidebar-heading">SESSION STARTERS</div><div id="presets"></div>
+  <div class="sidebar-heading">RECENT GENERATIONS</div><div id="history"></div>
+  <div class="sidebar-footer">Your ideas. Your hardware.<br>Local weights · local audio.<a href="/docs" target="_blank" rel="noreferrer">API documentation ↗</a></div>
+</aside>
+<main>
+  <header><span class="breadcrumb">WORKSPACE <span>/</span> <b id="page-label">MUSIC STUDIO</b></span><button id="system" class="system-pill"><i></i><span id="system-label">Checking models…</span></button></header>
+  <div class="heading"><div><div class="eyebrow">ACE-STEP 1.5 / LOCAL INFERENCE</div><h1 id="heading">An idea. A whole new sound.</h1><p id="subtitle">Give your next song somewhere to begin.</p></div><span class="edition">SOUND IN MOTION<br><b>01 — STUDIO</b></span></div>
+  <div class="model-strip"><div><span class="eyebrow">YOUR ENGINE</span><span id="model-note">Choose a model for this session.</span></div><div class="segmented" role="group" aria-label="Generation model"><button id="model-turbo" class="selected" aria-pressed="true">Turbo <small>2B · FAST</small></button><button id="model-xl" aria-pressed="false">XL Turbo <small>4B · QUALITY</small></button></div><button id="refresh-models" class="quiet">Refresh models</button><button id="release" class="quiet">Release GPU</button></div>
+  <div id="error" class="notice error" role="alert" hidden></div>
+  <section id="page-music">
+    <form id="song-form">
+      <div class="session-toolbar"><label class="title-field"><span class="sr-only">Session title</span><input name="title" value="Untitled session" maxlength="160"></label><div class="toolbar-actions"><button type="button" id="import">Import JSON</button><button type="button" id="export">Export JSON</button><button type="button" id="preview">View prompt ↗</button></div></div>
+      <input id="import-file" type="file" accept="application/json,.json" hidden>
+      <div class="workspace-grid">
+        <section class="panel"><div class="panel-heading"><span class="step">01</span><h2>The sound</h2><span class="tag">MAKE IT YOURS</span></div>
+          <label>Describe the music<textarea name="caption" rows="6" maxlength="4000" placeholder="Genre, instruments, atmosphere, voice, production…">Warm soul, brushed drums, Rhodes piano, intimate vocals</textarea></label>
+          <div class="field-grid" id="music-fields"></div>
+          <label class="check"><input name="instrumental" type="checkbox"> Instrumental · no vocals</label>
+          <details><summary>Reference & audio editing</summary><div class="field-grid">
+            <label>Task<select name="task"><option value="text2music">Create music</option><option value="cover">Cover existing audio</option><option value="repaint">Repaint a region</option></select></label>
+            <label>Cover strength<input name="cover_strength" type="number" min="0" max="1" step="0.05" value="1"></label>
+            <label class="wide">Style reference<input type="file" id="reference-file" accept=".wav,.flac,.mp3,.ogg"><span id="reference-label" class="hint">Optional: audio to guide the style.</span><button type="button" id="clear-reference" class="quiet">Clear reference</button></label>
+            <label class="wide">Source audio<input type="file" id="source-file" accept=".wav,.flac,.mp3,.ogg"><span id="source-label" class="hint">Required for cover and repaint.</span><button type="button" id="clear-source" class="quiet">Clear source</button></label>
+            <label>Repaint start (s)<input name="repaint_start" type="number" min="0" step="0.1" value="0"></label><label>Repaint end (s)<input name="repaint_end" type="number" min="0.1" step="0.1" value="10"></label>
+          </div></details>
+        </section>
+        <section class="panel song-panel"><div class="panel-heading"><span class="step">02</span><h2>The words</h2><span class="tag">LYRICS & STRUCTURE</span></div><p class="hint">Shape the song with [Verse], [Chorus], and [Bridge] tags.</p>
+          <label class="sr-only" for="lyrics">Song lyrics</label><textarea id="lyrics" name="lyrics" rows="16" maxlength="12000" placeholder="[Verse]&#10;The city settles into blue&#10;A quiet room, a softer view&#10;&#10;[Chorus]&#10;Let the night move slow&#10;There is nowhere else to go"></textarea>
+          <div class="lyric-tags"><button type="button" data-lyric="Verse">＋ Verse</button><button type="button" data-lyric="Chorus">＋ Chorus</button><button type="button" data-lyric="Bridge">＋ Bridge</button><button type="button" data-lyric="Instrumental break">＋ Break</button></div>
+          <p class="hint">For an instrumental, enable “Instrumental” in The sound. Your lyrics remain in the editor.</p>
+        </section>
+      </div>
+      <section class="panel generation-panel"><div class="generation-top"><div><div class="eyebrow">MAKE SOME SPACE</div><label class="duration-label">Duration <output id="duration-value">30s</output></label><input name="duration" type="range" min="10" max="600" step="5" value="30" aria-label="Song duration in seconds"><div class="range-labels"><span>10 SECONDS</span><span>10 MINUTES</span></div></div><div class="generate-area"><button type="submit" class="primary" id="generate">Generate music <span>↗</span></button><button type="button" id="compare" class="compare">Compare Turbo + XL · same seed</button><p class="hint">One model at a time. Listen when the full clip is ready.</p></div></div>
+      <details><summary>Generation controls <span>Seed, steps & composition</span></summary><div id="advanced-fields" class="field-grid advanced-grid"></div><p class="hint">8 steps is the turbo default. The optional language model plans the composition and adds latency. CPU offload reduces VRAM use. Long clips may need more memory; start with 30 seconds.</p></details></section>
+    </form>
+  </section>
+  <section id="page-speech" hidden>
+    <div class="notice experimental"><b>EXPERIMENTAL · ACE-STEP ONLY</b><p>Each completed word becomes a separate generated clip. ACE-Step is a music model: exact words, consistent voice, and real-time speech are not guaranteed. Short clips are outside its documented music range. No other speech engine is used.</p></div>
+    <div class="workspace-grid"><section class="panel"><div class="panel-heading"><span class="step">01</span><h2>Give it a voice</h2></div><label>Voice style<textarea id="voice-style" rows="5">Warm, clear British narrator, natural conversational delivery, dry close-mic recording</textarea></label><div class="field-grid"><label>Requested clip duration (seconds)<input id="speech-duration" type="number" min="0.5" max="30" step="0.5" value="2"></label><label>Seed<input id="speech-seed" type="number" min="0" max="2147483647" value="7"></label><label>Submit on<select id="speech-boundary"><option value="word">Every completed word</option><option value="sentence">Every sentence</option></select></label><label class="check"><input id="speech-offload" type="checkbox"> CPU offload</label></div><p class="hint">Current backend pads short requests to at least 5.12 seconds. The queue shows actual clip length. A fixed seed does not lock a speaker’s identity; sentence mode gives more context.</p></section>
+    <section class="panel"><div class="panel-heading"><span class="step">02</span><h2>Type. Hear. Explore.</h2><span class="tag" id="live-indicator">NOT LIVE</span></div><label for="speech-text">Your words</label><textarea id="speech-text" rows="7" placeholder="Start a live session, then type. Space or Enter completes a word."></textarea><div class="speech-actions"><button id="start-live" class="primary">Start live typing <span>↗</span></button><button id="flush-speech">Render remaining text</button><button id="stop-live" disabled>Stop & clear queue</button></div><p id="speech-status" class="hint" aria-live="polite">Audio starts when a generated clip is ready.</p></section></div>
+    <section class="panel speech-queue"><div class="panel-heading"><h2>Live queue</h2><span class="tag" id="queue-count">0 CLIPS</span></div><div id="speech-clips"><p class="hint">Completed words and their measured latency appear here.</p></div></section>
+  </section>
+  <section id="page-library" hidden><div class="panel-heading"><h2>Your saved sessions</h2><button id="refresh-library">Refresh library</button></div><div id="library-grid"></div></section>
+  <section class="panel player" aria-label="Selected generation"><div class="record-icon">♫</div><div class="player-content"><div class="player-title-row"><h2 id="track-title">Your next track starts here.</h2><span id="track-model" class="tag"></span></div><p id="job-message" aria-live="polite">Choose a starter or describe something new.</p><progress id="job-progress" max="1" value="0" hidden></progress><audio id="audio" controls preload="metadata" hidden></audio><div id="metrics" class="metrics"></div><div id="job-links" class="job-links"></div></div><button id="cancel" hidden>Cancel generation</button></section>
+  <div id="comparison" class="panel" hidden><div class="panel-heading"><h2>Same idea. Two interpretations.</h2><span class="tag">PAIRED COMPARISON</span></div><div id="comparison-results" class="workspace-grid"></div></div>
+  <footer>Music is generative. Prompts guide the result; they don’t guarantee it.<span>ACE-Step 1.5 · 48 kHz audio</span></footer>
+</main>
+<dialog id="dialog"><div class="dialog-heading"><h2 id="dialog-title"></h2><button id="close-dialog" aria-label="Close dialog">✕</button></div><pre id="dialog-content"></pre></dialog>
+<script src="/static/app.js" type="module"></script>
+</body></html>
